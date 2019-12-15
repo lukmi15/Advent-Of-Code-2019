@@ -1,10 +1,7 @@
-prog1: code1.cpp shared_classes.cpp Makefile
-	@g++ -Wall -o $@ $<
-
-prog2: code2.cpp shared_classes.cpp Makefile
+prog: code.cpp shared_classes.cpp Makefile
 	@g++ -Wall -o $@ $<
 
 clean:
-	@bash -c 'rm -v prog* ; exit 0'
+	@bash -c 'rm -v prog' 2>/dev/null ; exit 0
 
 .PHONY: clean

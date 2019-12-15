@@ -25,10 +25,23 @@ bool is_point_center(const Point pt)
 	return pt.horizontal == 0 and pt.vertical == 0;
 }
 
+UNSIGNED_VAL_TYPE count_delay_in_wire(const Point& pt, const vector<Point>& wire)
+{
+	UNSIGNED_VAL_TYPE res = 0;
+	for (const Point wire_pt : wire)
+	{
+		res++;
+		if (not is_point_center(wire_pt) and wire_pt.horizontal == pt.horizontal and wire_pt.vertical == pt.vertical)
+			return res;
+	}
+	return -1;
+}
+
 int main(int argc, char **argv)
 {
 	Wire red, blue;
 	UNSIGNED_VAL_TYPE current_closest_distance = -1;
+	UNSIGNED_VAL_TYPE this_delay, first_wire_delay = 0, current_shortest_delay = -1;
 	vector<Point> red_points, blue_points;
 	// Test data:
 	// red.right(98).up(47).right(26).down(63).right(33).up(87).left(62).down(20).right(33).up(53).right(51);
@@ -39,6 +52,7 @@ int main(int argc, char **argv)
 	blue_points = blue.get_points();
 	for (const Point pt : red_points)
 	{
+		first_wire_delay++;
 		cerr << "Checking point " << pt.horizontal << 'x' << pt.vertical << endl;
 		if (not is_point_center(pt) and is_point_in_vector(pt, blue_points))
 		{
@@ -46,10 +60,14 @@ int main(int argc, char **argv)
 			UNSIGNED_VAL_TYPE this_distance = calc_distance_from_center(pt);
 			if (calc_distance_from_center(pt) < current_closest_distance)
 				current_closest_distance = this_distance;
+			this_delay = first_wire_delay + count_delay_in_wire(pt, blue_points);
+			if (this_delay < current_shortest_delay)
+				current_shortest_delay = this_delay;
 		}
 		else
 			cerr << "Nope..." << endl;
 	}
-	cout << current_closest_distance << endl;
+	cout << "Closest distance to center: " << current_closest_distance << endl;
+	cout << "Shortest delay: " << current_shortest_delay << endl;
 	return 0;
 }
