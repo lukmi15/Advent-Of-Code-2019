@@ -56,10 +56,12 @@ int main(int argc, char **argv)
 	cout << is_valid(123444) << endl;
 	cout << is_valid(111122) << endl;
 	// unsigned start = 234208, stop = 765869, counter = 0;
-	// cout << setfill('0') << setw(6) << counter << flush;
+	// print_counter(counter);
 	// for (unsigned i = start; i <= stop; i++)
-	// 	if (is_valid(i))
-	// 		increase_counter(counter);
+	//	if (is_valid(i))
+	//	{
+	//		counter++;
+	//		print_counter(counter);
 	// cout << endl;
 	return 0;
 }

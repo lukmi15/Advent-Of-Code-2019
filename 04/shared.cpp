@@ -28,9 +28,8 @@ bool any_digit_decreases(const unsigned num)
 	return false;
 }
 
-void increase_counter(unsigned& counter)
+void print_counter(unsigned& counter)
 {
-	counter++;
 	for (unsigned i=0; i<6; i++)
 		cout << '\b';
 	cout << setfill('0') << setw(6) << counter << flush;
