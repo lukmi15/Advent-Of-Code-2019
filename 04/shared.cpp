@@ -3,6 +3,8 @@ Author(s)		: Lukas Mirow
 Date of creation	: 12/15/2019
 */
 
+#define COUNTER_LENGTH 6
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -21,7 +23,7 @@ bool any_digit_decreases(const unsigned num)
 	unsigned i = 0;
 	while (s[i+1] != '\0')
 	{
-		if (s[i] < s[i+1])
+		if (s[i+1] < s[i])
 			return true;
 		i++;
 	}
@@ -30,7 +32,7 @@ bool any_digit_decreases(const unsigned num)
 
 void print_counter(unsigned& counter)
 {
-	for (unsigned i=0; i<6; i++)
+	for (unsigned i=0; i<COUNTER_LENGTH; i++)
 		cout << '\b';
-	cout << setfill('0') << setw(6) << counter << flush;
+	cout << setfill('0') << setw(COUNTER_LENGTH) << counter << flush;
 }

@@ -38,30 +38,28 @@ bool has_adjacent_twin(const unsigned num)
 
 bool is_valid(unsigned num)
 {
-	// if (num < 234208 or num > 765869)
-	// 	return false;
-	cout << "here1" << endl;
+	if (num < 234208 or num > 765869)
+		return false;
 	if (not has_adjacent_twin(num))
 		return false;
-	cout << "here2" << endl;
 	if (any_digit_decreases(num))
 		return false;
-	cout << "here3" << endl;
 	return true;
 }
 
 int main(int argc, char **argv)
 {
-	cout << is_valid(112233) << endl;
-	cout << is_valid(123444) << endl;
-	cout << is_valid(111122) << endl;
-	// unsigned start = 234208, stop = 765869, counter = 0;
-	// print_counter(counter);
-	// for (unsigned i = start; i <= stop; i++)
-	//	if (is_valid(i))
-	//	{
-	//		counter++;
-	//		print_counter(counter);
-	// cout << endl;
+	// cout << is_valid(112233) << endl;
+	// cout << is_valid(123444) << endl;
+	// cout << is_valid(111122) << endl;
+	unsigned start = 234208, stop = 765869, counter = 0;
+	print_counter(counter);
+	for (unsigned i = start; i <= stop; i++)
+		if (is_valid(i))
+		{
+			counter++;
+			print_counter(counter);
+		}
+	cout << endl;
 	return 0;
 }
