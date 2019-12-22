@@ -8,50 +8,50 @@ Date of creation	: 12/15/2019
 #include "shared.cpp"
 using namespace std;
 
-bool next_char_is_equal(const char *str, const unsigned i)
+bool is_next_char_equal(const char *str, const unsigned i)
 {
 	return str[i] == str[i+1];
 }
 
-bool next_next_char_is_equal(const char *str, const unsigned i)
+bool is_next_next_char_equal(const char *str, const unsigned i)
 {
-	return next_char_is_equal(str, i+1);
+	return is_next_char_equal(str, i+1);
 }
 
-bool prev_char_is_equal(const char *str, const unsigned i)
+bool is_prev_char_equal(const char *str, const unsigned i)
 {
-	return next_char_is_equal(str, i-1);
+	return is_next_char_equal(str, i-1);
 }
 
-bool has_adjacent_twin(const unsigned num)
+bool check_twin_validity(const unsigned num)
 {
-	unsigned i = 1;
 	const char *s = num2str(num).c_str();
-	while (s[i+1] != '\0')
-	{
-		if (next_char_is_equal(s, i) and not next_next_char_is_equal(s, i) and not prev_char_is_equal(s, i))
+	for (unsigned i=0; s[i+2] != '\0'; i++)
+		if (is_next_char_equal(s, i) and not is_next_next_char_equal(s, i))
+		{
+			if (i > 0 and is_prev_char_equal(s, i))
+				continue;
 			return true;
-		i++;
-	}
+		}
 	return false;
+}
+
+bool is_in_range(const unsigned num)
+{
+	return 234208 <= num and num <= 765869;
 }
 
 bool is_valid(unsigned num)
 {
-	if (num < 234208 or num > 765869)
-		return false;
-	if (not has_adjacent_twin(num))
-		return false;
-	if (any_digit_decreases(num))
-		return false;
-	return true;
+	return is_in_range(num) and check_twin_validity(num) and not any_digit_decreases(num);
 }
 
 int main(int argc, char **argv)
 {
-	// cout << is_valid(112233) << endl;
-	// cout << is_valid(123444) << endl;
-	// cout << is_valid(111122) << endl;
+	// cout << "112233: " << is_valid(112233) << endl;
+	// cout << "123444: " << is_valid(123444) << endl;
+	// cout << "111122: " << is_valid(111122) << endl;
+	// cout << "224522: " << is_valid(224522) << endl;
 	unsigned start = 234208, stop = 765869, counter = 0;
 	print_counter(counter);
 	for (unsigned i = start; i <= stop; i++)
