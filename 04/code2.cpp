@@ -26,7 +26,7 @@ bool is_prev_char_equal(const char *str, const unsigned i)
 bool check_twin_validity(const unsigned num)
 {
 	const char *s = num2str(num).c_str();
-	for (unsigned i=0; s[i+2] != '\0'; i++)
+	for (unsigned i=0; s[i+1] != '\0'; i++)
 		if (is_next_char_equal(s, i) and not is_next_next_char_equal(s, i))
 		{
 			if (i > 0 and is_prev_char_equal(s, i))
