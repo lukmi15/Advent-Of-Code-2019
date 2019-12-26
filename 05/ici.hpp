@@ -15,7 +15,7 @@ Date of creation	: 12/09/2019
 #include <stdexcept>
 #include <string>
 
-typedef int ICI_TYPE;
+typedef unsigned ICI_TYPE;
 
 class Intcode_interpreter
 {

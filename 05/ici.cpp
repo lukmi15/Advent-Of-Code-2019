@@ -3,6 +3,9 @@ Author(s)		: Lukas Mirow
 Date of creation	: 12/09/2019
 */
 
+#define PARAMETER_MODE_ADDRESS 0
+#define PARAMETER_MODE_IMMEDIATE 1
+
 #include "ici.hpp"
 #include <iostream>
 #include <sstream>
@@ -19,15 +22,18 @@ void Intcode_interpreter::load_program(const ICI_TYPE *program, const unsigned l
 
 void Intcode_interpreter::step()
 {
-	unsigned parameter_count;
-	switch (memory[pc])
+	unsigned parameter_count, *parameter_modes;
+	switch (memory[pc] % 100)
 	{
 		case STOP_CODE:
 			pc = -1;
 			return;
 		case ADD_CODE:
+			parameter_count = 4; //TODO: How to properly add parameter mode support?
+			/*ICI_TYPE params[parameter_count-1];
+			for (unsigned i=0; i<parameter_count-1; i++)
+				if (*/
 			add(memory[pc + 1], memory[pc + 2], memory[pc + 3]);
-			parameter_count = 4;
 			break;
 		case MUL_CODE:
 			mul(memory[pc + 1], memory[pc + 2], memory[pc + 3]);
@@ -77,10 +83,10 @@ void Intcode_interpreter::mul(const ICI_TYPE a_address, const ICI_TYPE b_address
 void Intcode_interpreter::in(const ICI_TYPE address)
 {
 	cerr << "Expecting input for address '" << address << "': " << flush;
-	memory[address] << cin;
+	cin >> memory[address];
 };
 
 void Intcode_interpreter::out(const ICI_TYPE address)
 {
-	cout << memory[address] << flush;
+	cout << "Output from address: '" << address << "': " << memory[address] << endl;
 };
