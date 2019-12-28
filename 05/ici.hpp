@@ -42,7 +42,7 @@ class Intcode_interpreter
 		void in(const ici_t address);
 		void out(const ici_t _address);
 		ici_t *memory;
-		std::vector<unsigned> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
+		std::vector<parameter_mode_t> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
 		ici_t parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode);
 };
 
