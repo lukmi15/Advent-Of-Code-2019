@@ -6,6 +6,9 @@ Date of creation	: 12/09/2019
 #ifndef INTCODE_INTERPRETER_HPP
 #define INTCODE_INTERPRETER_HPP
 
+#define PARAMETER_MODE_ADDRESS 0
+#define PARAMETER_MODE_IMMEDIATE 1
+
 #define STOP_CODE 99
 #define ADD_CODE 1
 #define MUL_CODE 2
@@ -14,28 +17,33 @@ Date of creation	: 12/09/2019
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 
-typedef unsigned ICI_TYPE;
+typedef int ici_t;
+
+typedef unsigned parameter_mode_t;
 
 class Intcode_interpreter
 {
 	public:
 		std::string dump_memory();
-		Intcode_interpreter(ICI_TYPE *program, unsigned length) {load_program(program, length);}
+		Intcode_interpreter(ici_t *program, unsigned length) {load_program(program, length);}
 		void step();
 		void run();
 		~Intcode_interpreter() {delete memory;}
-		ICI_TYPE get_memory_at(const ICI_TYPE address) {return memory[address];}
+		ici_t get_memory_at(const ici_t address) {return memory[address];}
 
 	private:
 		unsigned memory_length;
-		void load_program(const ICI_TYPE *program, const unsigned length);
+		void load_program(const ici_t *program, const unsigned length);
 		unsigned pc = 0;
-		void add(const ICI_TYPE a_address, const ICI_TYPE b_address, const ICI_TYPE target_address);
-		void mul(const ICI_TYPE a_address, const ICI_TYPE b_address, const ICI_TYPE target_address);
-		void in(const ICI_TYPE address);
-		void out(const ICI_TYPE _address);
-		ICI_TYPE *memory;
+		void add(const ici_t a_param, const ici_t b_param, const ici_t target_address, std::vector<parameter_mode_t> parameter_modes);
+		void mul(const ici_t a_param, const ici_t b_param, const ici_t target_address, std::vector<parameter_mode_t> parameter_modes);
+		void in(const ici_t address);
+		void out(const ici_t _address);
+		ici_t *memory;
+		std::vector<unsigned> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
+		ici_t parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode);
 };
 
 #endif //INTCODE_INTERPRETER_HPP
