@@ -14,6 +14,10 @@ Date of creation	: 12/09/2019
 #define MUL_CODE 2
 #define IN_CODE 3
 #define OUT_CODE 4
+#define JUMP_IF_TRUE_CODE 5
+#define JUMP_IF_FALSE_CODE 6
+#define LESS_THAN_CODE 7
+#define EQUAL_TO_CODE 8
 
 #include <stdexcept>
 #include <string>
@@ -44,6 +48,11 @@ class Intcode_interpreter
 		ici_t *memory;
 		std::vector<parameter_mode_t> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
 		ici_t parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode);
+		void jump_if_true(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
+		void jump_if_false(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
+		void less_than(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
+		void equal_to(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
+		void validate_parameter_modes_for_writing_instructions(const std::vector<parameter_mode_t>& pms);
 };
 
 #endif //INTCODE_INTERPRETER_HPP
