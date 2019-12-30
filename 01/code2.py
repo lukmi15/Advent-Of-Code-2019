@@ -105,22 +105,24 @@ module_masses = [78207,
 73561,
 115214]
 
-total_fuel = 0
+def calc_fuel_for_mass(mass):
+	return int(mass / 3) - 2
 
-def recurse_fuel_for_fuel(initial_fuel_mass):
-	total_fuel_to_add = 0
-	fuel_to_add = initial_fuel_mass
-	fuel_to_add_negligible = False
-	while not fuel_to_add_negligible:
-		fuel_to_add = int(fuel_to_add / 3) - 2
-		if fuel_to_add > 0:
-			total_fuel_to_add += fuel_to_add
+def recurse_fuel_for_fuel(fuel_mass):
+	fuel_for_fuel = 0
+	fuel_to_add = fuel_mass
+	while (True):
+		fuel_to_add = calc_fuel_for_mass(fuel_to_add)
+		if (fuel_to_add > 0):
+			fuel_for_fuel += fuel_to_add
 		else:
-			fuel_to_add_negligible = True
-	return total_fuel_to_add
+			break
+	return fuel_for_fuel
 
+total_fuel = 0
 for module_mass in module_masses:
-	fuel_mass = int(module_mass / 3) - 2
-	total_fuel += fuel_mass + recurse_fuel_for_fuel(fuel_mass)
+	fuel_for_module = calc_fuel_for_mass(module_mass)
+	fuel_for_fuel = recurse_fuel_for_fuel(fuel_for_module)
+	total_fuel += fuel_for_module + fuel_for_fuel
 
 print total_fuel
