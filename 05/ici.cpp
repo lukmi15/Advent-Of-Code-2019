@@ -48,56 +48,73 @@ vector<parameter_mode_t> Intcode_interpreter::get_parameter_modes(const unsigned
 	return pms;
 }
 
+ici_t Intcode_interpreter::parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode)
+{
+	if (parameter_mode == PARAMETER_MODE_IMMEDIATE)
+		return param;
+	else
+		return memory[param];
+}
+
+void Intcode_interpreter::execute_writing_operation(const function<void(const vector<const ici_t>&) op, const unsigned parameter_count)
+{
+	const vector<const ici_t> parameters;
+	vector<parameter_mode_t> parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
+	validate_parameter_modes_for_writing_instructions(parameter_modes);
+	for (unsigned i = 1; i < parameter_count; i++)
+		parameters.push_back(parameter_to_value(memory[pc + i], parameter_modes[i - 1]));
+	op(parameters);
+}
+
+void Intcode_interpreter::execute_non_writing_operation(const function<void(const vector<const ici_t>&) op, const unsigned parameter_count)
+{
+	const vector<const ici_t> parameters;
+	vector<parameter_mode_t> parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
+	for (unsigned i = 1; i < parameter_count; i++)
+		parameters.push_back(parameter_to_value(memory[pc + i], parameter_modes[i - 1]));
+	op(parameters);
+}
+
 void Intcode_interpreter::step()
 {
 	unsigned parameter_count;
 	vector<unsigned> parameter_modes;
 	switch (memory[pc] % 100)
-	{ //TODO: Break the stuff in every case block down into a function of common operations
+	{
 		case STOP_CODE:
 			pc = -1;
 			return;
 		case ADD_CODE:
 			parameter_count = 4;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			validate_parameter_modes_for_writing_instructions(parameter_modes);
-			add(memory[pc + 1], memory[pc + 2], memory[pc + 3], parameter_modes);
+			execute_writing_operation(add, parameter_count);
 			break;
 		case MUL_CODE:
 			parameter_count = 4;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			validate_parameter_modes_for_writing_instructions(parameter_modes);
-			mul(memory[pc + 1], memory[pc + 2], memory[pc + 3], parameter_modes);
+			execute_writing_operation(mul, parameter_count);
 			break;
 		case IN_CODE:
-			in(memory[pc + 1]);
 			parameter_count = 2;
+			execute_writing_operation(in, parameter_count);
 			break;
 		case OUT_CODE:
-			out(memory[pc + 1]);
 			parameter_count = 2;
+			execute_non_writing_operation(in, parameter_count);
 			break;
 		case JUMP_IF_TRUE_CODE:
 			parameter_count = 3;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			jump_if_true(memory[pc + 1], memory[pc + 2], parameter_modes, parameter_count);
+			execute_non_writing_operation(jump_if_true, parameter_count);
 			break;
 		case JUMP_IF_FALSE_CODE:
 			parameter_count = 3;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			jump_if_false(memory[pc + 1], memory[pc + 2], parameter_modes, parameter_count);
+			execute_non_writing_operation(jump_if_false, parameter_count);
 			break;
 		case LESS_THAN_CODE:
 			parameter_count = 4;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			validate_parameter_modes_for_writing_instructions(parameter_modes);
-			less_than(memory[pc + 1], memory[pc + 2], memory[pc + 3], parameter_modes);
+			execute_writing_operation(less_than, parameter_count);
 			break;
 		case EQUAL_TO_CODE:
 			parameter_count = 4;
-			parameter_modes = get_parameter_modes(parameter_count, memory[pc]);
-			validate_parameter_modes_for_writing_instructions(parameter_modes);
-			equal_to(memory[pc + 1], memory[pc + 2], memory[pc + 3], parameter_modes);
+			execute_writing_operation(equal_to, parameter_count);
 			break;
 		default:
 			stringstream ss;
@@ -122,20 +139,13 @@ string Intcode_interpreter::dump_memory()
 	return ss.str();
 }
 
-ici_t Intcode_interpreter::parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode)
-{
-	if (parameter_mode == PARAMETER_MODE_IMMEDIATE)
-		return param;
-	else
-		return memory[param];
-}
-
-void Intcode_interpreter::add(const ici_t a_param, const ici_t b_param, const ici_t target_address, const vector<parameter_mode_t> parameter_modes)
+void Intcode_interpreter::add(const ici_t *params)
 {
 	ici_t a_value, b_value;
 	a_value = parameter_to_value(a_param, parameter_modes[0]);
 	b_value = parameter_to_value(b_param, parameter_modes[1]);
 	memory[target_address] = a_value + b_value;
+
 }
 
 void Intcode_interpreter::mul(const ici_t a_param, const ici_t b_param, const ici_t target_address, const vector<parameter_mode_t> parameter_modes)
