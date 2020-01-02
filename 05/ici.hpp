@@ -22,6 +22,7 @@ Date of creation	: 12/09/2019
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <functional>
 
 typedef int ici_t;
 
@@ -41,18 +42,20 @@ class Intcode_interpreter
 		unsigned memory_length;
 		void load_program(const ici_t *program, const unsigned length);
 		unsigned pc = 0;
-		void add(const ici_t a_param, const ici_t b_param, const ici_t target_address, std::vector<parameter_mode_t> parameter_modes);
-		void mul(const ici_t a_param, const ici_t b_param, const ici_t target_address, std::vector<parameter_mode_t> parameter_modes);
-		void in(const ici_t address);
-		void out(const ici_t _address);
+		void add(const std::vector<ici_t>& params);
+		void mul(const std::vector<ici_t>& params);
+		void in(const std::vector<ici_t>& params);
+		void out(const std::vector<ici_t>& params);
 		ici_t *memory;
 		std::vector<parameter_mode_t> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
 		ici_t parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode);
-		void jump_if_true(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
-		void jump_if_false(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
-		void less_than(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
-		void equal_to(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
+		void jump_if_true(const std::vector<ici_t>& params);
+		void jump_if_false(const std::vector<ici_t>& params);
+		void less_than(const std::vector<ici_t>& params);
+		void equal_to(const std::vector<ici_t>& params);
 		void validate_parameter_modes_for_writing_instructions(const std::vector<parameter_mode_t>& pms);
+		void execute_writing_operation(const std::function<void(const std::vector<ici_t>&)> op, const unsigned parameter_count);
+		void execute_non_writing_operation(const std::function<void(const std::vector<ici_t>&)> op, const unsigned parameter_count);
 };
 
 #endif //INTCODE_INTERPRETER_HPP
