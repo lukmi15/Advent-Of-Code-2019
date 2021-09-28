@@ -1,7 +1,7 @@
 prog1: code1.cpp tree.hpp
-	g++ -Wall -o $@ $<
+	@g++ -Wall -o $@ $<
 
-prog2: code2.cpp tree.cpp
+prog2: code2.cpp tree.hpp
 	@g++ -Wall -o $@ $<
 
 clean:
