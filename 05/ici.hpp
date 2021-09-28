@@ -48,8 +48,8 @@ class Intcode_interpreter
 		ici_t *memory;
 		std::vector<parameter_mode_t> get_parameter_modes(const unsigned parameter_count, const ici_t instruction);
 		ici_t parameter_to_value(const ici_t param, const parameter_mode_t parameter_mode);
-		void jump_if_true(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
-		void jump_if_false(const ici_t condition, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
+		void jump_if_true(const ici_t condition, const ici_t target_param, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
+		void jump_if_false(const ici_t condition, const ici_t target_param, const std::vector<parameter_mode_t> parameter_modes, const unsigned parameter_count);
 		void less_than(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
 		void equal_to(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes);
 		void validate_parameter_modes_for_writing_instructions(const std::vector<parameter_mode_t>& pms);

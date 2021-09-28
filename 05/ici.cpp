@@ -102,6 +102,7 @@ void Intcode_interpreter::step()
 		default:
 			stringstream ss;
 			ss << "Invalid opcode `" << memory[pc] << "` at address `" << pc << '`';
+			ss << "\nMemory dump:\n" << dump_memory();
 			throw invalid_argument(ss.str());
 	}
 	pc += parameter_count;
@@ -157,23 +158,20 @@ void Intcode_interpreter::out(const ici_t address)
 	cout << "Output from address: '" << address << "': " << memory[address] << endl; //FIXME: This is displayed after input of TEST
 }
 
-void Intcode_interpreter::jump_if_true(const ici_t condition, const ici_t target_address, const vector<parameter_mode_t> parameter_modes, const unsigned parameter_count)
+void Intcode_interpreter::jump_if_true(const ici_t condition, const ici_t target_param, const vector<parameter_mode_t> parameter_modes, const unsigned parameter_count)
 {
 	ici_t condition_value = parameter_to_value(condition, parameter_modes[0]);
+	ici_t target_address = parameter_to_value(target_param, parameter_modes[1]);
 	if (condition_value)
 		pc = target_address - parameter_count;
 }
 
-void Intcode_interpreter::jump_if_false(const ici_t condition, const ici_t target_address, const vector<parameter_mode_t> parameter_modes, const unsigned parameter_count)
+void Intcode_interpreter::jump_if_false(const ici_t condition, const ici_t target_param, const vector<parameter_mode_t> parameter_modes, const unsigned parameter_count)
 {
 	ici_t condition_value = parameter_to_value(condition, parameter_modes[0]);
-	cout << "pc: " << pc << endl;
+	ici_t target_address = parameter_to_value(target_param, parameter_modes[1]);
 	if (!condition_value)
-	{
-		cout << "condition met" << endl;
-		pc = memory[target_address] - parameter_count;
-	}
-	cout << "pc: " << pc << endl;
+		pc = target_address - parameter_count;
 }
 
 void Intcode_interpreter::less_than(const ici_t a_param, const ici_t b_param, const ici_t target_address, const std::vector<parameter_mode_t> parameter_modes)
