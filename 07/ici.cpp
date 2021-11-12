@@ -152,7 +152,7 @@ void Intcode_interpreter::in(const ici_t address)
 {
 	if (input_queue.size() > 0)
 	{
-		memory[address] = input_queue.back();
+		memory[address] = input_queue.front();
 		input_queue.pop();
 		return;
 	}
@@ -162,7 +162,7 @@ void Intcode_interpreter::in(const ici_t address)
 
 void Intcode_interpreter::out(const ici_t address)
 {
-	cout << "Output from address: '" << address << "': " << memory[address] << endl; //FIXME: This is displayed after input of TEST
+	//cout << "Output from address: '" << address << "': " << memory[address] << endl; //FIXME: This is displayed after input of TEST
 	last_outputs.push(memory[address]);
 }
 
